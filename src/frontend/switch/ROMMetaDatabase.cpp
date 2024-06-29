@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <assert.h>
 #include <string.h>
+#include <unordered_map>
 
 #include <arm_neon.h>
 

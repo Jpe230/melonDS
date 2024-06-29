@@ -12,6 +12,7 @@
 #include "memory_interface.h"
 #include "operand.h"
 #include "register.h"
+#include <utility>
 
 namespace Teakra {
 

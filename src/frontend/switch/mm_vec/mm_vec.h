@@ -117,6 +117,8 @@ USAGE:
 extern "C" {
 #endif
 
+#include <math.h>
+
 #ifdef MMX_STATIC
 #define MMX_API static
 #else
