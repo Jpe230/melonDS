@@ -1,4 +1,4 @@
-<p align="center"><img src="https://raw.githubusercontent.com/StapleButter/melonDS/master/icon/melon_128x128.png"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/melonDS-emu/melonDS/master/res/icon/melon_128x128.png"></p>
 <h2 align="center"><b>melonDS</b></h2>
 <p align="center">
 <a href="http://melonds.kuribo64.net/" alt="melonDS website"><img src="https://img.shields.io/badge/website-melonds.kuribo64.net-%2331352e.svg"></a>
@@ -39,68 +39,51 @@ As for the rest, the interface should be pretty straightforward. If you have a q
 
 ## How to build
 
-### Linux:
+### Nintendo Switch:
 
-1. Install dependencies: `sudo apt install cmake libcurl4-gnutls-dev libpcap0.8-dev libsdl2-dev qt5-default libslirp-dev libarchive-dev libepoxy-dev`
-2. Download the melonDS repository and prepare:
-  ```bash
-  git clone https://github.com/Arisotura/melonDS
-  cd melonDS
-  mkdir build && cd build
-  ```
-3. Compile:
-  ```bash
-  cmake ..
-  make -j$(nproc --all)
-  ```
+This guide assumes that you already set up your build enviroment for the Nintendo Switch, if not [see DevKitPro's guide](https://devkitpro.org/wiki/Getting_Started)
 
-### Windows:
+1. Install dependencies. for example for Debian based distros:
+```bash
+sudo apt update
+sudo apt install cmake ninja meson bison flex
+```
 
-1. Install [MSYS2](https://www.msys2.org/)
-2. Open the **MSYS2 MinGW 64-bit** terminal
-3. Update the packages using `pacman -Syu` and reopen the terminal if it asks you to
-4. Download the melonDS repository and prepare:
-  ```bash
-  git clone https://github.com/Arisotura/melonDS
-  cd melonDS
-  mkdir build && cd build
-  ```
-#### Dynamic builds (with DLLs)
-5. Install dependencies: `pacman -S git make mingw-w64-x86_64-{cmake,mesa,SDL2,toolchain,qt5,libslirp,libarchive,libepoxy}`
-6. Compile:
-   ```bash
-   cmake .. -G "MSYS Makefiles"
-   make -j$(nproc --all)
-   ../tools/msys-dist.sh
-   ```
-If everything went well, melonDS and the libraries it needs should now be in the `dist` folder.
+2. Compile dekotools:
+```bash
+cd ~/
+git clone https://github.com/fincs/dekotools
+cd dekotools
+meson setup builddir
+cd builddir
+ninja
+sudo cp ./dekodef /usr/bin/
+sudo cp ./dekomme /usr/bin/
+```
 
-#### Static builds (without DLLs, standalone executable)
-5. Install dependencies: `pacman -S git make mingw-w64-x86_64-{cmake,mesa,SDL2,toolchain,qt5-static,libslirp,libarchive,libepoxy}`
-6. Compile:
-   ```bash
-   cmake .. -G 'MSYS Makefiles' -DBUILD_STATIC=ON -DQT5_STATIC_DIR=/mingw64/qt5-static
-   make -j$(nproc --all)
-   mkdir dist && cp melonDS.exe dist
-   ```
-If everything went well, melonDS should now be in the `dist` folder.
+3. Compile deko3d: (Replace $DEVKITPRO with the path of DevKitPro installation)
+```bash
+cd ~/
+git clone https://github.com/RSDuck/deko3d
+cd deko3d
+git switch fix-10
+make
+sudo cp ./lib/libdeko3d.a $DEVKITPRO/libnx/lib/
+sudo cp ./lib/libdeko3dd.a $DEVKITPRO/libnx/lib/
+```
 
-### macOS:
-1. Install the [Homebrew Package Manager](https://brew.sh)
-2. Install dependencies: `brew install git pkg-config cmake sdl2 qt@6 libslirp libarchive libepoxy`
-3. Download the melonDS repository and prepare:
-  ```zsh
-  git clone https://github.com/Arisotura/melonDS
-  cd melonDS
-  mkdir build && cd build
-  ```
-4. Compile:
-   ```zsh
-   cmake .. -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6);$(brew --prefix libarchive)" -DUSE_QT6=ON -DMACOS_BUNDLE_LIBS=ON
-   make -j$(sysctl -n hw.logicalcpu)
-   ```
-If everything went well, melonDS.app should now be in the curent directory.
-
+4. Download this melonDS repository and prepare:
+```bash
+cd ~/
+git clone https://github.com/RSDuck/melonDS 
+cd melonDS
+mkdir build && cd build
+```
+5. Compile:
+```bash
+cmake .. -DENABLE_OGLRENDERER=OFF -DBUILD_QT_SDL=OFF -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-cross-Switch.cmake
+make -j$(nproc --all)
+```
    
 ## TODO LIST
 
